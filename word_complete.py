@@ -5,10 +5,6 @@ import sys
 
 def find_str(chars, word_list):
     word_begin_li = [w for w in word_list if w.startswith(chars)]
-    word_any_li = [w for w in word_list if chars in w and w not in word_begin_li]
-
-    word_begin_li.extend(word_any_li)
-
     return word_begin_li[:10], 0
 
 
