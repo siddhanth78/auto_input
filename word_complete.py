@@ -137,17 +137,6 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
                     current_row -= 1
                 sys.stdout.write(f"\033[{current_row};1H{line}")
 
-            if suggestions:
-                suggestion_text = f"[{' | '.join(suggestions[:15])}]"
-                suggestion_lines = wrap_text(suggestion_text, terminal_width)
-                for i, line in enumerate(suggestion_lines):
-                    current_row = start_row + num_lines + i
-                    if current_row >= terminal_height:
-                        sys.stdout.write(f"\033[{terminal_height};1H\n")
-                        start_row -= 1
-                        current_row -= 1
-                    sys.stdout.write(f"\033[{current_row};1H\033[K{line}")
-
             cursor_row = start_row + len(wrapped_lines) - 1
             cursor_col = len(wrapped_lines[-1]) % terminal_width + 1
             sys.stdout.write(f"\033[{cursor_row};{cursor_col}H")
