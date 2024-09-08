@@ -38,7 +38,7 @@ def wrap_text(text: str, width: int) -> List[str]:
 def find_str(chars: str, word_list: List[str]) -> Tuple[List[str], int]:
     word_begin_li = [w for w in word_list if w.startswith(chars)]
     word_begin_li.sort()
-    return word_begin_li, 0
+    return word_begin_li[:10], 0
 
 def prompt_(words: List[str], prompt_: str = "") -> str:
     sys.stdout.write(prompt_)
@@ -115,7 +115,10 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
             else:
                 suggestions = []
             
-            display = f"{prompt_}{all_words}{word}"
+            if suggestions:
+                display = f"{prompt_}{all_words}{word} [{'|'.join(suggestions)}]"
+            else:
+                display = f"{prompt_}{all_words}{word}"
             wrapped_lines = wrap_text(display, terminal_width)
             
             
