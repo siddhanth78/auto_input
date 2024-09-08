@@ -1,19 +1,16 @@
-import re
 import msvcrt
 import sys
 
 
 def find_str(chars, word_list):
     word_begin_li = [w for w in word_list if w.startswith(chars)]
+    word_begin_li.sort()
     return word_begin_li[:10], 0
 
 
-def clear_current_line():
-    sys.stdout.write("\0338\033[0J")
-    sys.stdout.flush()
-
-
 def prompt_(words, prompt_=""):
+    sys.stdout.write("\n" * 20)
+    sys.stdout.write(f"\033[20A")
     sys.stdout.write(f"{prompt_}")
     sys.stdout.write("\u001B[s")
     sys.stdout.flush()
@@ -81,12 +78,10 @@ def prompt_(words, prompt_=""):
                 suggestions = []
 
             if suggestions:
-                display = f"{all_words}{word} [{'|'.join(suggestions)}]"
+                display = f"{all_words}{word} [top 10: {' | '.join(suggestions)}]"
             else:
                 display = f"{all_words}{word}"
 
-            sys.stdout.write("\u001B[u\033[0J")
-            sys.stdout.write(" " * len(display))
             sys.stdout.write("\u001B[u\033[0J")
             sys.stdout.write(display)
             sys.stdout.flush()
