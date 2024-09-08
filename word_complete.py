@@ -78,7 +78,7 @@ def prompt_(words, prompt_=""):
                 suggestions = []
 
             if suggestions:
-                display = f"{all_words}{word} [top 10: {' | '.join(suggestions)}]"
+                display = f"{all_words}{word} [Top 10 matches: {' | '.join(suggestions)}]"
             else:
                 display = f"{all_words}{word}"
 
