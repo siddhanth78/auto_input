@@ -129,26 +129,22 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
             else:
                 display = f"{prompt_}{all_words}{word}"
             wrapped_lines = wrap_text(display, terminal_width)
-            
-            # Clear the lines from the cursor to the end
-            sys.stdout.write("\u001B[s")  # Save cursor position
-            sys.stdout.write("\033[J")  # Clear from cursor to end of screen
 
-            # Print the wrapped lines
+            sys.stdout.write("\u001B[s")
+            sys.stdout.write("\033[J")
+
             for i, line in enumerate(wrapped_lines):
                 current_row = start_row + i
                 if current_row >= terminal_height:
-                    # Move to bottom and clear lines
                     sys.stdout.write(f"\033[{terminal_height};1H\n")
                     start_row -= 1
                     current_row -= 1
                 sys.stdout.write(f"\033[{current_row};1H{line}")
             sys.stdout.flush()
 
-            # Restore cursor position
             cursor_row = start_row + len(wrapped_lines) - 1
             cursor_col = len(wrapped_lines[-1]) % terminal_width + 1
-            
+
             sys.stdout.write(f"\033[{cursor_row};{cursor_col}H")
 
             sys.stdout.write("\u001B[s")
