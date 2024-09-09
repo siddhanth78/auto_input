@@ -36,13 +36,15 @@ def get_terminal_size() -> Tuple[int, int]:
 
 
 def wrap_text(text: str, width: int) -> List[str]:
-    return [text[i : i + width] for i in range(0, len(text), width)]
+    if not text:
+        return [""]
+    return [text[i : i + width] for i in range(0, len(text), width)] or [""]
 
 
 def find_str(chars: str, word_list: List[str]) -> Tuple[List[str], int]:
     word_begin_li = [w for w in word_list if w[: len(chars)] == chars]
     word_begin_li.sort()
-    return word_begin_li[:10], 0
+    return word_begin_li[:15], 0
 
 
 def prompt_(words: List[str], prompt_: str = "") -> str:
@@ -127,7 +129,7 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
             else:
                 display = f"{prompt_}{all_words}{word}"
             wrapped_lines = wrap_text(display, terminal_width)
-
+            
             # Clear the lines from the cursor to the end
             sys.stdout.write("\u001B[s")  # Save cursor position
             sys.stdout.write("\033[J")  # Clear from cursor to end of screen
@@ -141,10 +143,12 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
                     start_row -= 1
                     current_row -= 1
                 sys.stdout.write(f"\033[{current_row};1H{line}")
+            sys.stdout.flush()
 
             # Restore cursor position
             cursor_row = start_row + len(wrapped_lines) - 1
             cursor_col = len(wrapped_lines[-1]) % terminal_width + 1
+            
             sys.stdout.write(f"\033[{cursor_row};{cursor_col}H")
 
             sys.stdout.write("\u001B[s")
