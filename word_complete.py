@@ -141,14 +141,20 @@ class Wordcompleter:
                         sflag = 1
                 else:
                     char = char.decode()
-                    if char == " ":
-                        all_words += word + " "
+                    if char.isalnum() or char == " ":
+                        if char == " ":
+                            all_words += word + " "
+                            letters = []
+                            word = ""
+                            sflag = 0
+                        else:
+                            letters.append(char)
+                            word = "".join(letters)
+                            sflag = 0
+                    else:
+                        all_words += word + char
                         letters = []
                         word = ""
-                        sflag = 0
-                    else:
-                        letters.append(char)
-                        word = "".join(letters)
                         sflag = 0
 
                 if word.strip():
