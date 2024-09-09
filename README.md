@@ -39,3 +39,4 @@ word_list = au.file_to_words(doc)
 wcompleter = Wordcompleter(word_list)
 input_ = wcompleter.prompt(prompt_ = ">>")
 ```
+Known issue: Displays nothing when the display is the same length as your terminal width, but input is saved so it is safe to click "Enter" and get input.
