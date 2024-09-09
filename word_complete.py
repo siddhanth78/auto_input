@@ -141,7 +141,7 @@ class Wordcompleter:
                         sflag = 1
                 else:
                     char = char.decode()
-                    if char.isalnum() or char == " ":
+                    if char.isalnum() or char == " " or char == "_":
                         if char == " ":
                             all_words += word + " "
                             letters = []
