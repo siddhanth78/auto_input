@@ -5,8 +5,8 @@ import ctypes
 from ctypes import wintypes
 from typing import List, Tuple
 
-# Setup for Windows console API interaction
 kernel32 = ctypes.windll.kernel32
+
 
 class CONSOLE_SCREEN_BUFFER_INFO(ctypes.Structure):
     _fields_ = [
@@ -17,11 +17,13 @@ class CONSOLE_SCREEN_BUFFER_INFO(ctypes.Structure):
         ("dwMaximumWindowSize", wintypes._COORD),
     ]
 
+
 def get_cursor_position() -> Tuple[int, int]:
     h_stdout = kernel32.GetStdHandle(-11)
     csbi = CONSOLE_SCREEN_BUFFER_INFO()
     kernel32.GetConsoleScreenBufferInfo(h_stdout, ctypes.byref(csbi))
     return csbi.dwCursorPosition.Y + 1, csbi.dwCursorPosition.X + 1
+
 
 def get_terminal_size() -> Tuple[int, int]:
     h_stdout = kernel32.GetStdHandle(-11)
@@ -32,13 +34,16 @@ def get_terminal_size() -> Tuple[int, int]:
         csbi.srWindow.Right - csbi.srWindow.Left + 1,
     )
 
+
 def wrap_text(text: str, width: int) -> List[str]:
-    return [text[i: i + width] for i in range(0, len(text), width)]
+    return [text[i : i + width] for i in range(0, len(text), width)]
+
 
 def find_str(chars: str, word_list: List[str]) -> Tuple[List[str], int]:
-    word_begin_li = [w for w in word_list if w.startswith(chars)]
+    word_begin_li = [w for w in word_list if w[: len(chars)] == chars]
     word_begin_li.sort()
     return word_begin_li[:10], 0
+
 
 def prompt_(words: List[str], prompt_: str = "") -> str:
     sys.stdout.write(prompt_)
@@ -52,6 +57,8 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
 
     terminal_height, terminal_width = get_terminal_size()
     start_row, start_col = get_cursor_position()
+
+    words = list(set(words))
 
     while True:
         if msvcrt.kbhit():
@@ -88,7 +95,7 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
                             letters = []
                     sflag = 0
             elif char == b"\xe0":
-                arrow = msvcrt.getch().decode('utf-8')
+                arrow = msvcrt.getch().decode("utf-8")
                 if arrow == "H":
                     sindex = (sindex - 1) % len(suggestions) if suggestions else 0
                 elif arrow == "P":
@@ -114,14 +121,13 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
                     suggestions, sindex = find_str(word, words)
             else:
                 suggestions = []
-            
+
             if suggestions:
-                display = f"{prompt_}{all_words}{word} [{'|'.join(suggestions)}]"
+                display = f"{prompt_}{all_words}{word} [{' | '.join(suggestions)}]"
             else:
                 display = f"{prompt_}{all_words}{word}"
             wrapped_lines = wrap_text(display, terminal_width)
-            
-            
+
             # Clear the lines from the cursor to the end
             sys.stdout.write("\u001B[s")  # Save cursor position
             sys.stdout.write("\033[J")  # Clear from cursor to end of screen
@@ -143,7 +149,7 @@ def prompt_(words: List[str], prompt_: str = "") -> str:
 
             sys.stdout.write("\u001B[s")
             sys.stdout.write("\033[J")
-            
+
             sys.stdout.flush()
 
     return all_words + word
