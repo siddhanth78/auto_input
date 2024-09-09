@@ -1,4 +1,4 @@
-## Auto-input
+## AutoPyInput
 
 - For Windows
 - Requires Python >= 3.10
@@ -8,8 +8,8 @@
 ## Usage
 
 ```
-from auto_input.word_complete import Wordcompleter
-import autocomplete.utils as au
+from autopyinput.word_complete import Wordcompleter
+import autopyinput.utils as au
 
 # Custom words
 word_list = ['hello', 'world', 'word', 'hi']
