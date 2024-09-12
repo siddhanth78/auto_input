@@ -44,16 +44,48 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
+        self.has_empty_string = False
 
     def insert(self, word):
+        if word == "":
+            self.has_empty_string = True
+            return
+
         node = self.root
         for char in word:
             if char not in node.children:
                 node.children[char] = TrieNode()
             node = node.children[char]
         node.is_end_of_word = True
+        
+    def remove(self, word):
+        if word == "":
+            self.has_empty_string = False
+            return
+
+        def _remove(node, word, depth):
+            if depth == len(word):
+                if node.is_end_of_word:
+                    node.is_end_of_word = False
+                return len(node.children) == 0 and not node.is_end_of_word
+
+            char = word[depth]
+            if char not in node.children:
+                return False
+
+            should_delete_current_node = _remove(node.children[char], word, depth + 1)
+
+            if should_delete_current_node:
+                del node.children[char]
+                return len(node.children) == 0 and not node.is_end_of_word
+            return False
+
+        _remove(self.root, word, 0)
 
     def find_prefix(self, prefix):
+        if prefix == "":
+            return [""] if self.has_empty_string else []
+
         node = self.root
         for char in prefix:
             if char not in node.children:
@@ -89,11 +121,14 @@ class Wordcompleter:
         words = list(words)
         for word in words:
             self.trie.insert(word)
+            
+    def remove_word(self, word):
+        self.trie.remove(word)
 
     def find_str(self, chars):
         suggestions = self.trie.find_prefix(chars)
         suggestions.sort()
-        return suggestions[:15], 0
+        return suggestions[:10], 0
 
     def prompt(self, prompt_: str = "") -> str:
         sys.stdout.write(prompt_)
@@ -178,17 +213,18 @@ class Wordcompleter:
 
                 if suggestions:
                     if sflag == 1:
-                        sugstr = ' | '.join(f"\033[47;30m{sugg}\033[0m" if suggestions[sindex-1] == sugg else sugg for sugg in suggestions)
+                        sugstr = ' | '.join(f">> {s} <<" if s == suggestions[sindex-1] else s for s in suggestions)
                     else:
                         sugstr = ' | '.join(suggestions)
+                        
                     display = f"{prompt_}{all_words}{word} [{sugstr}]"
                     if len(display)%terminal_width == 0:
                         display = f"{prompt_}{all_words}{word} [{sugstr}] "
                 else:
-                    display = f"{prompt_}{all_words}{word}"   
+                    display = f"{prompt_}{all_words}{word}"
                     if len(display)%terminal_width == 0:
                         display = f"{prompt_}{all_words}{word} "
-                
+                    
                 wrapped_lines = wrap_text(display, terminal_width)
 
                 sys.stdout.write("\u001B[s")
@@ -207,10 +243,9 @@ class Wordcompleter:
                 cursor_col = len(wrapped_lines[-1]) % terminal_width + 1
 
                 sys.stdout.write(f"\033[{cursor_row};{cursor_col}H")
-
+                
                 sys.stdout.write("\u001B[s")
                 sys.stdout.write("\033[J")
-
                 sys.stdout.flush()
 
         return all_words + word
