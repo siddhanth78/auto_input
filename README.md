@@ -52,5 +52,6 @@ wc.add_list(new_words_to_suggest)
 ```
 # Add cleaned text
 words = ["def", "main():", "print(", ")"]
-
+cleaned_words = [au.clean(w) for w in words]
+wc.add_list(cleaned_words)
 ```
