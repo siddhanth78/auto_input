@@ -13,8 +13,8 @@ import autopyinput.utils as au
 
 # Custom words
 word_list = ['hello', 'world', 'word', 'hi']
-wcompleter = Wordcompleter(word_list)
-input_ = wcompleter.prompt(prompt_ = ">>")
+wc = Wordcompleter(word_list)
+input_ = wc.prompt(prompt_ = ">>")
 ```
 
 ```
@@ -26,9 +26,9 @@ def main():
 main()
 '''
 
-word_list = au.string_to_words(au.clean(doc))
-wcompleter = Wordcompleter(word_list)
-input_ = wcompleter.prompt(prompt_ = ">>")
+word_list = au.string_to_words(doc)
+wc = Wordcompleter(word_list)
+input_ = wc.prompt(prompt_ = ">>")
 ```
 
 ```
@@ -36,16 +36,15 @@ input_ = wcompleter.prompt(prompt_ = ">>")
 doc = "example.txt"
 
 word_list = au.file_to_words(doc)
-wcompleter = Wordcompleter(word_list)
-input_ = wcompleter.prompt(prompt_ = ">>")
+wc = Wordcompleter(word_list)
+input_ = wc.prompt(prompt_ = ">>")
 ```
 
 ```
 # Update suggestions
-
 new_word = "new_word"
-wcompleter.add_word(new_word)
+wc.add_word(new_word)
 
 new_words_to_suggest = ["new", "words"]
-wcompleter.add_list(new_words_to_suggest)
+wc.add_list(new_words_to_suggest)
 ```
