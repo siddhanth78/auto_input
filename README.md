@@ -18,7 +18,7 @@ input_ = wc.prompt(prompt_ = ">>")
 ```
 
 ```
-# Clean up and use string
+# Use string
 doc = '''
 #hello world!
 def main():
@@ -32,7 +32,7 @@ input_ = wc.prompt(prompt_ = ">>")
 ```
 
 ```
-# Clean up and use file data
+# Use file data
 doc = "example.txt"
 
 word_list = au.file_to_words(doc)
@@ -47,4 +47,10 @@ wc.add_word(new_word)
 
 new_words_to_suggest = ["new", "words"]
 wc.add_list(new_words_to_suggest)
+```
+
+```
+# Add cleaned text
+words = ["def", "main():", "print(", ")"]
+
 ```
