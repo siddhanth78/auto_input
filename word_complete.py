@@ -76,6 +76,13 @@ class Wordcompleter:
         self.trie = Trie()
         for word in words:
             self.trie.insert(word)
+            
+    def add_word(self, word):
+        self.trie.insert(word)
+        
+    def add_list(self, words):
+        for word in words:
+            self.trie.insert(word)
 
     def find_str(self, chars):
         suggestions = self.trie.find_prefix(chars)
@@ -164,9 +171,18 @@ class Wordcompleter:
                     suggestions = []
 
                 if suggestions:
-                    display = f"{prompt_}{all_words}{word} [{' | '.join(suggestions)}]"
+                    if sflag == 1:
+                        sugstr = ' | '.join(f"\033[47;30m{sugg}\033[0m" if suggestions[sindex-1] == sugg else sugg for sugg in suggestions)
+                    else:
+                        sugstr = ' | '.join(suggestions)
+                    display = f"{prompt_}{all_words}{word} [{sugstr}]"
+                    if len(display)%terminal_width == 0:
+                        display = f"{prompt_}{all_words}{word} [{sugstr}] "
                 else:
-                    display = f"{prompt_}{all_words}{word}"
+                    display = f"{prompt_}{all_words}{word}"   
+                    if len(display)%terminal_width == 0:
+                        display = f"{prompt_}{all_words}{word} "
+                
                 wrapped_lines = wrap_text(display, terminal_width)
 
                 sys.stdout.write("\u001B[s")
