@@ -74,6 +74,9 @@ class Trie:
 class Wordcompleter:
     def __init__(self, words):
         self.trie = Trie()
+        words = set(words)
+        words.discard("")
+        words = list(words)
         for word in words:
             self.trie.insert(word)
             
@@ -81,6 +84,9 @@ class Wordcompleter:
         self.trie.insert(word)
         
     def add_list(self, words):
+        words = set(words)
+        words.discard("")
+        words = list(words)
         for word in words:
             self.trie.insert(word)
 
