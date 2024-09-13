@@ -213,13 +213,13 @@ class Wordcompleter:
 
                 if suggestions:
                     if sflag == 1:
-                        sugstr = ' | '.join(f">> {s} <<" if s == suggestions[sindex-1] else s for s in suggestions)
+                        sugstr = ' | '.join(f"[{s}]" if s == suggestions[sindex-1] else s for s in suggestions)
                     else:
                         sugstr = ' | '.join(suggestions)
                         
-                    display = f"{prompt_}{all_words}{word} [{sugstr}]"
+                    display = f"{prompt_}{all_words}{word} | {sugstr} |"
                     if len(display)%terminal_width == 0:
-                        display = f"{prompt_}{all_words}{word} [{sugstr}] "
+                        display = f"{prompt_}{all_words}{word} | {sugstr} | "
                 else:
                     display = f"{prompt_}{all_words}{word}"
                     if len(display)%terminal_width == 0:
