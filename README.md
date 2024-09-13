@@ -47,6 +47,12 @@ wc.add_word(new_word)
 
 new_words_to_suggest = ["new", "words"]
 wc.add_list(new_words_to_suggest)
+
+word_to_remove = "old_word"
+wc.remove_word(word_to_remove)
+
+words_to_remove = ["old", "words"]
+wc.remove_list(words_to_remove)
 ```
 
 ```
