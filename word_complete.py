@@ -106,24 +106,27 @@ class Trie:
 class Wordcompleter:
     def __init__(self, words):
         self.trie = Trie()
-        words = set(words)
-        words.discard("")
-        words = list(words)
         for word in words:
-            self.trie.insert(word)
+            if word:
+                self.trie.insert(word)
             
     def add_word(self, word):
-        self.trie.insert(word)
+        if word:
+            self.trie.insert(word)
         
     def add_list(self, words):
-        words = set(words)
-        words.discard("")
-        words = list(words)
         for word in words:
-            self.trie.insert(word)
+            if word:
+                self.trie.insert(word)
             
     def remove_word(self, word):
-        self.trie.remove(word)
+        if word:
+            self.trie.remove(word)
+        
+    def remove_list(self, words):
+        for word in words:
+            if word:
+                self.trie.remove(word)
 
     def find_str(self, chars):
         suggestions = self.trie.find_prefix(chars)
