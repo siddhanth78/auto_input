@@ -187,7 +187,7 @@ class Wordcompleter:
                     elif arrow == "P":
                         sindex = (sindex + 1) % len(suggestions) if suggestions else 0
                     if suggestions:
-                        word = suggestions[sindex]
+                        word = suggestions[sindex-1]
                         letters = list(word)
                         sflag = 1
                 else:
