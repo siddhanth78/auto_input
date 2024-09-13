@@ -105,35 +105,44 @@ class Trie:
 
 class Wordcompleter:
     def __init__(self, words):
+        words = set(words)
+        words.discard("")
+        words = list(words)
         self.trie = Trie()
         for word in words:
-            if word:
-                self.trie.insert(word)
+            self.trie.insert(word)
             
     def add_word(self, word):
+        word = word.strip()
         if word:
             self.trie.insert(word)
         
     def add_list(self, words):
+        words = set(words)
+        words.discard("")
+        words = list(words)
         for word in words:
-            if word:
-                self.trie.insert(word)
+            self.trie.insert(word)
             
     def remove_word(self, word):
+        word = word.strip()
         if word:
             self.trie.remove(word)
         
     def remove_list(self, words):
+        words = set(words)
+        words.discard("")
+        words = list(words)
         for word in words:
-            if word:
-                self.trie.remove(word)
+            self.trie.remove(word)
 
     def find_str(self, chars):
         suggestions = self.trie.find_prefix(chars)
         suggestions.sort()
         return suggestions[:10], 0
 
-    def prompt(self, prompt_: str = "") -> str:
+    def prompt(self, prompt_: str = "", max_size: int = None, end: str = "\n") -> str:
+        end = end.replace("\n", "\n\r")
         sys.stdout.write(prompt_)
         sys.stdout.flush()
         letters = []
@@ -142,6 +151,7 @@ class Wordcompleter:
         word = ""
         sflag = 0
         all_words = ""
+        size = 0
 
         terminal_height, terminal_width = get_terminal_size()
         start_row, start_col = get_cursor_position()
@@ -151,7 +161,7 @@ class Wordcompleter:
                 char = msvcrt.getch()
 
                 if char in (b"\r", b"\n"):
-                    print()
+                    sys.stdout.write(end)
                     return all_words + word
 
                 if char == b"\t":
@@ -198,6 +208,10 @@ class Wordcompleter:
                             letters = []
                             word = ""
                             sflag = 0
+                            size += 1
+                            if size == max_size and max_size != None:
+                                sys.stdout.write(end)
+                                return all_words
                         else:
                             letters.append(char)
                             word = "".join(letters)
@@ -220,9 +234,9 @@ class Wordcompleter:
                     else:
                         sugstr = ' | '.join(suggestions)
                         
-                    display = f"{prompt_}{all_words}{word} | {sugstr} |"
+                    display = f"{prompt_}{all_words}{word} ( {sugstr} )"
                     if len(display)%terminal_width == 0:
-                        display = f"{prompt_}{all_words}{word} | {sugstr} | "
+                        display = f"{prompt_}{all_words}{word} ( {sugstr} ) "
                 else:
                     display = f"{prompt_}{all_words}{word}"
                     if len(display)%terminal_width == 0:
